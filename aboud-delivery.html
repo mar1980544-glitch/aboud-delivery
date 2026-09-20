@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>عبود توصيل إب</title>
+  <style>
+    :root {
+      --p: #d81b60;
+      --p-dark: #b71c1c;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --text: #212529;
+      --text-muted: #6c757d;
+      --border: #e9ecef;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 80px;
+    }
+
+    .hdr {
+      background: var(--p);
+      color: white;
+      padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .hdr-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ico {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      position: relative;
+    }
+
+    .ico .bd {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ffeb3b;
+      color: #000;
+      font-size: 11px;
+      font-weight: bold;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rsp { height: 22px; background: var(--p); }
+    .rsp+.curve { margin-top: -22px; }
+
+    .curve {
+      background: var(--bg);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 16px;
+    }
+
+    .fld {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      margin-top: 8px;
+    }
+
+    .hours {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .ht {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      background: var(--card-bg);
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+
+    .ht::-webkit-scrollbar { display: none; }
+
+    .ct {
+      background: #f1f3f5;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ct.on {
+      background: var(--p);
+      color: white;
+    }
+
+    .sec {
+      padding: 14px;
+    }
+
+    .sec-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 calc(env(safe-area-inset-bottom, 0px) + 8px);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .nav-item.on {
+      color: var(--p);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script>
+    const ST = {
+      cart: { sid: null, items: [] }
+    };
+
+    const V = {
+      sopen: false,
+      sq: ''
+    };
+
+    function esc(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function stars(r) {
+      return '⭐ ' + Number(r).toFixed(1);
+    }
+
+    function renderStore(s) {
+      const cnt = ST.cart.items.reduce((a, b) => a + b.cnt, 0);
+      const secs = (s.secs || []).concat(
+        (s.secs || []).filter(c => c.n !== 'الأكثر طلباً').map((c, k) => ({ id: 'c' + k, n: c.n, e: c.e, items: c.items }))
+      ).filter(c => c.id === 'fav' || (c.items && c.items.length));
+
+      return `
+  <div class="hdr"><div class="hdr-row">
+    <button class="ico" data-act="back" aria-label="رجوع">→</button>
+    <div class="title">${esc(s.n)}</div>
+    <button class="ico" data-act="storeSearch" aria-label="بحث">🔍</button>
+    <button class="ico" data-act="cartSheet" aria-label="السلة">🛒${ST.cart.sid===s.id&&cnt?`<span class="bd">${cnt}</span>`:''}</button>
+    <button class="ico" data-act="share" aria-label="مشاركة">⤴</button>
+  </div>
+  ${V.sopen?`<div style="padding:0 14px 12px"><input id="sq" class="fld" style="margin:0" placeholder="ابحث داخل المتجر..." value="${esc(V.sq)}"></div>`:''}</div>
+  <div style="background:var(--p);color:#fff">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 14px 12px;font-size:13.5px"><span>${s.r?stars(s.r)+` (${s.rc})`:'متجر جديد'}</span><span>${esc(s.tags?s.tags[0]:'')}</span></div>
+    <div style="padding:0 14px 14px;display:flex;gap:8px;align-items:center;font-size:13.5px"><span>📍 ${esc(s.area)}</span><span class="pill" style="margin-inline-start:auto">${s.d} كيلو</span></div>
+  </div>
+  <div class="curve" style="padding:12px 14px 12px;margin-top:-2px"><div class="hours" style="justify-content:space-between"><span class="pill">${s.open?'مفتوح':'مغلق'}</span><span>🕒 الطلب يستغرق ${s.t}</span></div></div>
+  <div class="ht" id="ht" style="position:sticky;top:calc(64px + env(safe-area-inset-top,0px));z-index:40">${secs.map((c,k)=>`<button class="ct ${k===1?'on':''}" data-act="jump" data-id="${c.id}"><span>${c.e\vert{}\vert{}''}</span>${esc(c.n)}</button>`).join('')}</div>
+  <div class="sec">
+    ${secs.map(c => `
+      <div id="${c.id}" style="margin-bottom: 20px;">
+        <div class="sec-title">${esc(c.n)}</div>
+        <div class="grid">
+          ${(c.items || []).map(i => `
+            <div class="card">
+              <div><strong>${esc(i.n)}</strong></div>
+              <div style="font-size:12px;color:var(--text-muted);">${(i.p || 0).toLocaleString('ar')} ر.ي</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `).join('')}
+  </div>
+      `;
+    }
+
+    // Demo Data & Initial Render
+    const sampleStore = {
+      id: 'store1',
+      n: 'مطعم التراث اليمني',
+      r: 4.8,
+      rc: 120,
+      tags: ['وجبات شعبية'],
+      area: 'إب - الدائري',
+      d: 2.5,
+      open: true,
+      t: '25-35 دقيقة',
+      secs: [
+        { id: 'sec1', n: 'الأطباق الرئيسية', e: '🍲', items: [{ n: 'سلتة يمنية', p: 1500 }, { n: 'فحسة باللحم', p: 2500 }] },
+        { id: 'sec2', n: 'المشويات', e: '🥩', items: [{ n: 'مشكل مشوي', p: 3500 }] }
+      ]
+    };
+
+    document.getElementById('app').innerHTML = renderStore(sampleStore);
+  </script>
+</body>
+</html>
